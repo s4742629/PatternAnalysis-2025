@@ -46,7 +46,17 @@ ConvNeXt-Tiny is the smallest architecture variant of the ConvNeXt family introd
 
 # ADNI Dataset
 
-The ADNI dataset contains two-dimensional grayscale MRI brain scan images divided into two categories: normal cognitive (NC) and Alzheimer’s disease (AD) patients. Each image has dimensions of 256 by 240 pixels. Data were collected from 1,051 patients, with 20 distinct scans available per patient. The dataset is provided in two prepared subsets: a training set containing 21,520 samples and a testing set containing 9,000 samples. The class distribution between AD and NC is approximately balanced in both subsets.
+The ADNI dataset contains two-dimensional grayscale MRI brain scan images divided into two categories: normal cognitive (NC) and Alzheimer’s disease (AD) patients. Each image has dimensions of 256 by 240 pixels. Data were collected from 1,051 patients, with 20 distinct scans available per patient. The dataset is provided in two prepared subsets: a training set containing 21,520 samples and a testing set containing 9,000 samples. The class distribution between AD and NC is roughly equal in both subsets, but there is some discrepancy. The dataset is structured within its folder as follows:
+
+```
+AD_NC  
+├── test  
+│   ├── AD  
+│   └── NC  
+└── train  
+    ├── AD  
+    └── NC  
+```
 
 ## Data Split
 
