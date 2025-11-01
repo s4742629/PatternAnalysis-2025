@@ -10,7 +10,11 @@ ConvNeXt is a modern CNN architecture derived from ResNet, designed to compete w
 
 ## ConvNeXt Architecture
 
+![ConvNeXt overview](/images/ConvNeXt.png)
+
 The model begins with a stem composed of a `4×4` convolutional layer with stride `4`. This reduces the input dimensions by a factor of four while increasing the channel depth to `96`, yielding a higher-dimensional feature space. This aggressive reduction effectively *patchifies* the image, analogous to the patch embeddings used in Vision Transformers. Each `4×4` receptive field acts as an individual patch, similar to the `16×16` patch segmentation used by many ViT models.
+
+![Hierarchical structure](/images/H-struc.png)
 
 Following the stem are four hierarchical stages of ConvNeXt blocks. Each stage progressively reduces spatial resolution while increasing the number of channels. Between stages, a `2×2` convolutional downsampling layer with stride `2` halves the spatial dimensions and doubles the number of channels. These layers form a feature pyramid that expands the model’s receptive field, enabling a transition from local to global feature learning.  
 
