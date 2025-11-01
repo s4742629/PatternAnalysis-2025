@@ -1,5 +1,15 @@
+# Introduction
+
+The diagnosis of brain illnesses is conventionally carried out through invasive biopsy procedures or manual examination of medical images. However, manual interpretation can introduce subjectivity and human error, potentially leading to inaccurate diagnoses.
+
+This project investigates the viability of ConvNeXt, a state-of-the-art convolutional neural network (CNN) image classifier, for identifying Alzheimer’s disease (AD) from medical imaging data. The model was trained and evaluated using the ADNI dataset, which contains two-dimensional MRI brain scans of both normal cognitive (NC) and Alzheimer’s disease (AD) patients.
+
+# ConvNeXt
+
+ConvNeXt is a modern CNN architecture derived from ResNet, designed to compete with Vision Transformers (ViTs) by adopting several Transformer-inspired design principles while retaining a purely convolutional structure. Its main advantages over ViTs are lower data requirements and reduced computational complexity, making it well-suited for medical imaging tasks where datasets are often limited. These properties allow ConvNeXt to achieve strong performance while minimizing overfitting. Furthermore, through transfer learning—using pretrained weights from large-scale image datasets—ConvNeXt models have demonstrated promising accuracy in classifying MRI brain scans and detecting early signs of Alzheimer’s disease.
+
 ## ConvNeXt Architecture
----
+
 The model begins with a stem composed of a `4×4` convolutional layer with stride `4`. This reduces the input dimensions by a factor of four while increasing the channel depth to `96`, yielding a higher-dimensional feature space. This aggressive reduction effectively *patchifies* the image, analogous to the patch embeddings used in Vision Transformers. Each `4×4` receptive field acts as an individual patch, similar to the `16×16` patch segmentation used by many ViT models.
 
 Following the stem are four hierarchical stages of ConvNeXt blocks. Each stage progressively reduces spatial resolution while increasing the number of channels. Between stages, a `2×2` convolutional downsampling layer with stride `2` halves the spatial dimensions and doubles the number of channels. These layers form a feature pyramid that expands the model’s receptive field, enabling a transition from local to global feature learning.  
