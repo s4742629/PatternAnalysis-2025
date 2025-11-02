@@ -231,7 +231,7 @@ Classification Report:
 weighted avg     0.7824    0.7648    0.7607      9000
 ```
 
-Evaluation on the test set demonstrated that the inclusion of dropout improved performance, achieving a test accuracy of 76.47%. The confusion matrix showed a decrease in the number of incorrectly classified normal cognitive cases, indicating that the addition of dropout reduced false positives and improved the model’s generalisation. However, further improvements are necessary to meet the desired accuracy of 80%.
+Evaluation on the test set demonstrated that the inclusion of dropout improved performance, achieving a test accuracy of 76.47%. The confusion matrix showed a decrease in the number of incorrect classifications and an increase in correct classifications, indicating that the addition of dropout improved the model’s generalisation. However, further improvements are necessary to meet the desired accuracy of 80%.
 
 <p align="center">
     <img src="./images/confusion-matrix-2.png" width="720" alt="confusion matrix 2">
