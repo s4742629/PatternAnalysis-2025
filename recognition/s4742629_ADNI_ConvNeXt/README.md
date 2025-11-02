@@ -115,11 +115,11 @@ eval_tf = transforms.Compose([
     ])
 ```
 
-#Model
+# Model
 
 A ConvNeXt-Tiny model was defined and trained on the dataset. The architecture consisted of convolutional block stages of `[3, 3, 9, 3]` with corresponding channel dimensions of `[96, 192, 384, 768]`. The number of input channels was set to `1` to accommodate grayscale images, and the drop path rate was set to `0.1` to improve regularization and reduce overfitting.
 
-##Hyperparameters
+## Hyperparameters
 
 - Optimizer: The **AdamW** optimizer was selected based on its effectiveness in similar studies. AdamW was chosen over Stochastic Gradient Descent (SGD) because it decouples weight decay from gradient updates, providing more stable convergence for ConvNeXt models.
 - Loss Function: **CrossEntropyLoss** was used for binary classification. This function combines log-softmax and negative log-likelihood, emphasizing differences in prediction confidence and penalizing confident incorrect predictions.
@@ -133,7 +133,79 @@ A ConvNeXt-Tiny model was defined and trained on the dataset. The architecture c
 - Batch Size: `128`
 - Number of Workers: `8`
 
-###Additional Optimizations
+### Additional Optimizations
 
-To address the slight class imbalance in the dataset, class weights were incorporated into the loss function. These weights were calculated based on the inverse frequency of each class. A patience mechanism was also implemented so that if the model failed to improve for a specified number of epochs, training would
+To address the slight class imbalance in the dataset, class weights were incorporated into the loss function. These weights were calculated based on the inverse frequency of each class. A patience mechanism was also implemented so that if the model failed to improve for a specified number of epochs, training would automatically stop.
 
+# Usage
+
+## Steps to Run
+
+To train the model, execute the `train.py` file.
+
+```python
+python train.py
+```
+
+Ensure that the folder containing both pre-prepared ADNI datasets is located in the same directory as train.py. After training is complete, the best model parameters will be automatically saved in this directory. The training script also evaluates the model on the test set and generates corresponding confusion matrices. To test a previously trained model or to generate sample predictions without retraining, run `predict.py` instead.
+
+```python
+python predict.py
+```
+
+**Note:** These files were developed using Google Colab.
+
+## Required Dependencies
+
+```python
+# Core
+import os
+import re
+import sys
+import random
+from collections import defaultdict, Counter
+
+# Numbers and plotting
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Machine learning & metrics
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+    f1_score,
+)
+
+# Deep learning
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils.data import Dataset, Subset, DataLoader
+from torch.optim.lr_scheduler import SequentialLR, LinearLR, CosineAnnealingLR
+
+# Computer vision
+import torchvision.transforms as transforms
+from PIL import Image
+
+# Progress bar
+from tqdm import tqdm
+
+# ConvNeXt model components
+from timm.models.layers import trunc_normal_, DropPath
+```
+
+Versions used:
+
+```python
+torch==2.2.2
+torchvision==0.17.2
+timm==1.0.3
+numpy==1.26.4
+scikit-learn==1.4.2
+pillow==10.2.0
+matplotlib==3.8.3
+tqdm==4.66.4
+```
