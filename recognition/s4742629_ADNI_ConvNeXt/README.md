@@ -54,6 +54,14 @@ ConvNeXt-Tiny is the smallest architectural variant of the ConvNeXt family intro
 
 # ADNI Dataset
 
+<p align="center">
+    <img src="./images/AD.jpeg" width="350" alt="AD sample">
+</p>
+
+<p align="center">
+    <img src="./images/NC.jpeg" width="350" alt="NC sample">
+</p>
+
 The ADNI dataset contains two-dimensional grayscale MRI brain scan images divided into two categories: normal cognitive (NC) and Alzheimer’s disease (AD) patients. Each image has dimensions of 256 by 240 pixels. Data were collected from 1,051 patients, with 20 distinct scans available per patient. The dataset is provided in two prepared subsets: a training set containing 21,520 samples and a testing set containing 9,000 samples. The class distribution between AD and NC is roughly equal in both subsets, but there is some discrepancy. The data is structured in its folder as follows:
 
 ```
@@ -92,6 +100,10 @@ eval_tf = transforms.Compose([
         transforms.Normalize(mean=[mean], std=[std]),
     ])
 ```
+
+<p align="center">
+    <img src="./images/trainset.png" width="720" alt="Training images">
+</p>
 
 The second category consisted of random augmentations applied only to the training set to increase data diversity and reduce overfitting. These included:
 
@@ -144,6 +156,10 @@ To address the slight class imbalance in the dataset, class weights were incorpo
 
 After 120 epochs of training, the model achieved a training accuracy of 94.48% and a final validation accuracy of 90.81%. The highest validation accuracy recorded during training was 91.23%.
 
+<p align="center">
+    <img src="./images/learning-plots-1.png" width="900" alt="learning plots 1">
+</p>
+
 Plots of loss and accuracy indicate that the validation accuracy initially exceeded the training accuracy up to approximately 30 epochs, after which the training accuracy began to surpass it. The validation accuracy showed great instability in the early stages of training, suggesting that the initial learning rate may have been set too high. This likely caused the optimiser to over-adjust the network’s weights and biases. The instability began to subside after about 60 epochs, once the cosine annealing learning rate scheduler had reduced the learning rate sufficiently to stabilise optimisation.
 
 Between epochs 80 and 100, the training and validation accuracies both plateaued, with training accuracy remaining consistently higher than validation accuracy.
@@ -166,6 +182,10 @@ weighted avg     0.7733    0.7487    0.7424      9000
 
 Evaluation on the test set showed an overall accuracy of 74.86%, which fell short of the target accuracy of 80%. The classification report revealed that the AD class achieved a strong precision score of 0.85, indicating that most predictions labelled as Alzheimer’s disease were correct. However, recall for this class was relatively low at 0.59, meaning a substantial number of true Alzheimer’s cases were misclassified as non-demented. In contrast, the NC class exhibited higher recall than precision, suggesting that most of the images predicted as healthy were indeed correct.
 
+<p align="center">
+    <img src="./images/confusion-matrix-1.png" width="720" alt="confusion-matrix-1">
+</p>
+
 The confusion matrix confirmed this trend, showing that many AD-class images were incorrectly classified as NC, leading to a high number of false negatives.
 
 The model’s reduced accuracy could be attributed to domain shift between the training/validation and test datasets, as MRI scans often vary in brightness and contrast across different sessions and machines. Another factor may have been overfitting during later epochs, where the training accuracy continued to rise while validation performance stagnated.
@@ -187,6 +207,10 @@ self.head[1].bias.data.mul_(head_init_scale)
 
 By randomly disabling channels within the linear layer, the model was encouraged to learn relationships across a broader range of features rather than over-relying on specific ones.
 
+<p align="center">
+    <img src="./images/learning-plots-2.png" width="900" alt="learning plots 2">
+</p>
+
 When retrained for another 120 epochs, the model achieved an increased training accuracy of 96.22%, but a slight decrease in validation accuracy to approximately 91%. The learning curves indicated that training was more stable after 50 epochs, though some instability persisted during earlier epochs.
 
 ```Python
@@ -207,7 +231,15 @@ weighted avg     0.7824    0.7648    0.7607      9000
 
 Evaluation on the test set demonstrated that the inclusion of dropout improved performance, achieving a test accuracy of 76.47%. The confusion matrix showed a notable increase in correctly classified Alzheimer’s cases, indicating that the addition of dropout effectively reduced false negatives and improved the model’s generalisation.
 
+<p align="center">
+    <img src="./images/confusion-matrix-2.png" width="720" alt="confusion matrix 2">
+</p>
+
 A sample of predictions is shown below alongside the model's confidence.
+
+<p align="center">
+    <img src="./images/sample-test-predictions.png" width="720" alt="sample test predictions">
+</p>
 
 ## Potential Improvements
 Several approaches could be explored to improve the model’s accuracy, including:
