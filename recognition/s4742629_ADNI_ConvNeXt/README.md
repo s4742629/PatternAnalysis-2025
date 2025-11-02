@@ -2,7 +2,7 @@
 
 The diagnosis of brain illnesses is conventionally carried out through invasive biopsy procedures or manual examination of medical images. However, manual interpretation can introduce subjectivity and human error, potentially leading to inaccurate diagnoses.
 
-This project investigates the viability of ConvNeXt, a state-of-the-art convolutional neural network (CNN) image classifier, for identifying Alzheimer’s disease (AD) from medical imaging data. The model was trained and evaluated using the ADNI dataset, which contains two-dimensional MRI brain scans of both normal cognitive (NC) and Alzheimer’s disease (AD) patients.
+This project investigates the viability of ConvNeXt, a state-of-the-art convolutional neural network (CNN) image classifier, for identifying Alzheimer’s disease (AD) from medical imaging data. The model was trained and evaluated using the ADNI dataset, which contains two-dimensional MRI brain scans of both normal cognitive (NC) and Alzheimer’s disease (AD) patients. The goal was to achieve a **test accuracy of at least 80%** using a ConvNeXt model to classify the ADNI dataset.
 
 # ConvNeXt
 
@@ -137,6 +137,45 @@ A ConvNeXt-Tiny model was defined and trained on the dataset. The architecture c
 
 To address the slight class imbalance in the dataset, class weights were incorporated into the loss function. These weights were calculated based on the inverse frequency of each class. A patience mechanism was also implemented so that if the model failed to improve for a specified number of epochs, training would automatically stop.
 
+# Results
+
+## Attempt 1
+
+After 120 epochs of training, the model achieved a training accuracy of 94.48% and a final validation accuracy of 90.81%. The highest validation accuracy recorded during training was 91.23%.
+
+Plots of loss and accuracy indicate that the validation accuracy initially exceeded the training accuracy up to approximately 30 epochs, after which the training accuracy began to surpass it. The validation accuracy displayed considerable instability in the early stages of training, suggesting that the initial learning rate may have been set too high. This likely caused the optimiser to over-adjust the network’s weights and biases. The instability began to subside after about 60 epochs, once the cosine annealing learning rate scheduler had reduced the learning rate sufficiently to stabilise optimisation.
+
+Between epochs 80 and 100, the training and validation accuracies both plateaued, with training accuracy remaining consistently higher than validation accuracy.
+
+Evaluation on the test set showed an overall accuracy of 74.86%, which fell short of the target accuracy of 80%. The classification report revealed that the AD class achieved a strong precision score of 0.85, indicating that most predictions labelled as Alzheimer’s disease were correct. However, recall for this class was relatively low at 0.59, meaning a substantial number of true Alzheimer’s cases were misclassified as non-demented. In contrast, the NC class exhibited higher recall than precision, suggesting that most of the images predicted as healthy were indeed correct.
+
+The confusion matrix confirmed this trend, showing that many AD-class images were incorrectly classified as NC, leading to a high number of false negatives.
+
+The model’s reduced accuracy could be attributed to domain shift between the training/validation and test datasets, as MRI scans often vary in brightness and contrast across sessions or scanners. Another contributing factor may have been overfitting during later epochs, where the training accuracy continued to rise while validation performance stagnated or declined.
+
+## Attempt 2
+To enhance regularisation and improve long-term generalisation, a dropout layer (30% rate) was added to the head of the ConvNeXt model.
+
+```python
+self.head = nn.Sequential(
+            nn.Dropout(0.3),
+            nn.Linear(dims[-1], num_classes)
+    )
+        
+self.apply(self._init_weights)
+
+self.head[1].weight.data.mul_(head_init_scale)
+self.head[1].bias.data.mul_(head_init_scale)
+```
+
+By randomly disabling channels within the linear layer, the model was encouraged to learn relationships across a broader range of features rather than over-relying on specific ones.
+
+When retrained for another 120 epochs, the model achieved an increased training accuracy of 96.22%, but a slight decrease in validation accuracy to approximately 91%. The learning curves indicated that training was more stable after 50 epochs, though some instability persisted during earlier epochs.
+
+Evaluation on the test set demonstrated that the inclusion of dropout improved performance, achieving a test accuracy of 76.47%. The confusion matrix showed a notable increase in correctly classified Alzheimer’s cases, indicating that the addition of dropout effectively reduced false negatives and improved the model’s generalisation.
+
+A sample of predictions is shown below alongside the model's confidence.
+
 # Usage
 
 ## Steps to Run
@@ -209,3 +248,9 @@ pillow==10.2.0
 matplotlib==3.8.3
 tqdm==4.66.4
 ```
+# References
+
+- Basereh, M 2025, ConvNeXt-Driven Detection of Alzheimer’s Disease: A Benchmark Study on Expert-Annotated AlzaSet MRI Dataset Across Anatomical Planes, bioRXiv, viewed 2 November 2025, <https://www.biorxiv.org/content/10.1101/2025.07.10.664260v1>.
+- Liu, Z, Mao, H, Wu, C-Y, Feichtenhofer, C, Darrell, T & Xie, S 2022, ‘A ConvNet for the 2020s’, arXiv:2201.03545 [cs].
+- Mehmood, Y & Bajwa, UI 2024, ‘Brain tumor grade classification using the ConvNext architecture’, DIGITAL HEALTH, vol. 10.
+- Rao, Y, Zhao, W, Zhu, Z, Zhou, J & Lu, J 2023, ‘GFNet: Global Filter Networks for Visual Recognition’, IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 45, IEEE Computer Society, no. 9, pp. 10960–10973.
