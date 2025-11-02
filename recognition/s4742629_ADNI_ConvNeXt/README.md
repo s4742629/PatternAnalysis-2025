@@ -190,8 +190,8 @@ By randomly disabling channels within the linear layer, the model was encouraged
 When retrained for another 120 epochs, the model achieved an increased training accuracy of 96.22%, but a slight decrease in validation accuracy to approximately 91%. The learning curves indicated that training was more stable after 50 epochs, though some instability persisted during earlier epochs.
 
 ```Python
-Evaluating Best Model on Test Set...
-
+Evaluating best model on test set
+Testing: 100%|██████████| 71/71 [00:15<00:00,  5.06it/s]
 Test Accuracy: 76.4778%
 
 Classification Report:
