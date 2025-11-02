@@ -209,6 +209,13 @@ Evaluation on the test set demonstrated that the inclusion of dropout improved p
 
 A sample of predictions is shown below alongside the model's confidence.
 
+## Potential Improvements
+Several approaches could be explored to improve the model’s accuracy, including:
+
+- Implementing Mixup and CutMix: In these augmentation techniques, two different images from the training set are either blended or partially combined, with a new label assigned based on the proportion of each image. These methods help reduce the model’s overconfidence, create smoother decision boundaries, and encourage the model to learn a broader range of features.
+- Using Exponential Moving Averages (EMA): EMA can help reduce the noise and instability observed during the early stages of training by updating model parameters gradually using aggregated historical values. This leads to more stable convergence and smoother performance trends.
+- Adjusting the Decision Threshold: Plotting model accuracy against various decision thresholds can provide insight into how threshold adjustments affect class balance. This allows for fine-tuning of the classification boundary to achieve a better trade-off between sensitivity and specificity.
+
 # Usage
 
 ## Steps to Run
