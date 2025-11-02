@@ -1,5 +1,7 @@
 # Introduction
 
+### Gundeep Singh Somal, 47426294
+
 The diagnoses of brain illnesses are conventionally carried out through either invasive biopsy procedures or manual examination of medical images subject to human error. The need for a reliable, robust, and non-invasive approach to medical brain examination is apparent.
 
 Thus, this project aims to investigate the viability of ConvNeXt, a state-of-the-art convolutional neural network (CNN) image classifier, for identifying Alzheimer’s disease (AD) from medical imaging data. The model was trained and evaluated using the ADNI dataset, which contains two-dimensional MRI brain scans of both normal cognitive (NC) and Alzheimer’s disease (AD) patients. The goal was to achieve a **test accuracy of at least 80%** using a ConvNeXt model to classify the ADNI dataset.
