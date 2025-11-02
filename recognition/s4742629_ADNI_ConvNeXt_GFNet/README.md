@@ -10,7 +10,13 @@ ConvNeXt is a modern CNN architecture derived from ResNet, designed to compete w
 
 ## ConvNeXt Architecture
 
+<p align="center">
+    <img src="./images/ConvNeXt.png" width="720" alt="ConvNeXt Architecture">
+</p>
+
 The model begins with a stem composed of a `4×4` convolutional layer with stride `4`. This reduces the input dimensions by a factor of four while increasing the channel depth to `96`, yielding a higher-dimensional feature space. This aggressive reduction effectively *patchifies* the image, analogous to the patch embeddings used in Vision Transformers. Each `4×4` receptive field acts as an individual patch, similar to the `16×16` patch segmentation used by many ViT models.
+
+![Hierarchical structure](/images/H-struc.png)
 
 Following the stem are four hierarchical stages of ConvNeXt blocks. Each stage progressively reduces spatial resolution while increasing the number of channels. Between stages, a `2×2` convolutional downsampling layer with stride `2` halves the spatial dimensions and doubles the number of channels. These layers form a feature pyramid that expands the model’s receptive field, enabling a transition from local to global feature learning.  
 
@@ -93,9 +99,11 @@ train_tf = transforms.Compose([
 ```
 
 The second category consisted of random augmentations applied only to the training set to increase data diversity and reduce overfitting. These included:
+
 - Random resized crops, horizontal flips, rotations, and affine transformations to simulate variations in orientation and scale found in real medical imaging.
 - Random erasing and resized crops to obscure regions of the image, encouraging the model to learn generalized features rather than memorizing specific patterns.
 - Gaussian blur and color jitter to mimic variations in brightness and image fidelity, improving robustness to noise and imaging inconsistencies.
+
 These augmentations aimed to enhance regularization and improve the model’s generalizability to unseen medical data.
 
 ```python
@@ -106,3 +114,26 @@ eval_tf = transforms.Compose([
         transforms.Normalize(mean=[mean], std=[std]),
     ])
 ```
+
+#Model
+
+A ConvNeXt-Tiny model was defined and trained on the dataset. The architecture consisted of convolutional block stages of `[3, 3, 9, 3]` with corresponding channel dimensions of `[96, 192, 384, 768]`. The number of input channels was set to `1` to accommodate grayscale images, and the drop path rate was set to `0.1` to improve regularization and reduce overfitting.
+
+##Hyperparameters
+
+- Optimizer: The **AdamW** optimizer was selected based on its effectiveness in similar studies. AdamW was chosen over Stochastic Gradient Descent (SGD) because it decouples weight decay from gradient updates, providing more stable convergence for ConvNeXt models.
+- Loss Function: **CrossEntropyLoss** was used for binary classification. This function combines log-softmax and negative log-likelihood, emphasizing differences in prediction confidence and penalizing confident incorrect predictions.
+- Learning Rate Scheduler: The scheduler used a **linear warmup** phase followed by **cosine annealing**. The warmup stabilized early training, while cosine decay enabled smoother convergence for later epochs.
+- Label Smoothing: `0.1`
+- Learning Rate: `3e-4`
+- Weight Decay: `1e-4`
+- Number of Epochs: `120`
+- Warmup Epochs: `10`
+- Patience: `20`
+- Batch Size: `128`
+- Number of Workers: `8`
+
+###Additional Optimizations
+
+To address the slight class imbalance in the dataset, class weights were incorporated into the loss function. These weights were calculated based on the inverse frequency of each class. A patience mechanism was also implemented so that if the model failed to improve for a specified number of epochs, training would
+
