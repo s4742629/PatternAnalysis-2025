@@ -157,7 +157,7 @@ To address the slight class imbalance in the dataset, class weights were incorpo
 After 120 epochs of training, the model achieved a training accuracy of 94.48% and a final validation accuracy of 90.81%. The highest validation accuracy recorded during training was 91.23%.
 
 <p align="center">
-    <img src="./images/learning-plots-1.png" width="900" alt="learning plots 1">
+    <img src="./images/learning-plots-1.png" width="1100" alt="learning plots 1">
 </p>
 
 Plots of loss and accuracy indicate that the validation accuracy initially exceeded the training accuracy up to approximately 30 epochs, after which the training accuracy began to surpass it. The validation accuracy showed great instability in the early stages of training, suggesting that the initial learning rate may have been set too high. This likely caused the optimiser to over-adjust the network’s weights and biases. The instability began to subside after about 60 epochs, once the cosine annealing learning rate scheduler had reduced the learning rate sufficiently to stabilise optimisation.
@@ -208,28 +208,28 @@ self.head[1].bias.data.mul_(head_init_scale)
 By randomly disabling channels within the linear layer, the model was encouraged to learn relationships across a broader range of features rather than over-relying on specific ones.
 
 <p align="center">
-    <img src="./images/learning-plots-2.png" width="900" alt="learning plots 2">
+    <img src="./images/learning-plots-2.png" width="1100" alt="learning plots 2">
 </p>
 
 When retrained for another 120 epochs, the model achieved an increased training accuracy of 96.22%, but a slight decrease in validation accuracy to approximately 91%. The learning curves indicated that training was more stable after 50 epochs, though some instability persisted during earlier epochs.
 
 ```Python
-Evaluating best model on test set
-Testing: 100%|██████████| 71/71 [00:15<00:00,  5.06it/s]
-Test Accuracy: 76.4778%
+Evaluating best model on test set...
+Testing: 100%|██████████| 71/71 [00:14<00:00,  5.05it/s]
+Test Accuracy: 75.1000%
 
 Classification Report:
               precision    recall  f1-score   support
 
-          AD     0.8525    0.6352    0.7280      4460
-          NC     0.7134    0.8921    0.7928      4540
+          AD     0.8613    0.5930    0.7024      4460
+          NC     0.6939    0.9062    0.7859      4540
 
-    accuracy                         0.7648      9000
-   macro avg     0.7830    0.7636    0.7604      9000
-weighted avg     0.7824    0.7648    0.7607      9000
+    accuracy                         0.7510      9000
+   macro avg     0.7776    0.7496    0.7442      9000
+weighted avg     0.7768    0.7510    0.7446      9000
 ```
 
-Evaluation on the test set demonstrated that the inclusion of dropout improved performance, achieving a test accuracy of 76.47%. The confusion matrix showed a notable increase in correctly classified Alzheimer’s cases, indicating that the addition of dropout effectively reduced false negatives and improved the model’s generalisation.
+Evaluation on the test set demonstrated that the inclusion of dropout improved performance, achieving a test accuracy of 75.10%. The confusion matrix showed a slight increase in correctly classified Alzheimer’s cases, indicating that the addition of dropout reduced false negatives and improved the model’s generalisation. However, this is only a minor increase, suggesting that further improvements are necessary to meet the desired accuracy.
 
 <p align="center">
     <img src="./images/confusion-matrix-2.png" width="720" alt="confusion matrix 2">
